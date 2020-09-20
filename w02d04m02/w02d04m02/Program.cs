@@ -1,5 +1,4 @@
-﻿/*
- Objective: Battle with the basilisk
+﻿/* Objective: Battle with the basilisk
 Part 1
 It's time to battle! Forget about the gelatinous cubes though, our party will face a basilisk. You know, the one that can turn you into stone? And to make things easier, let's start with a party of four warriors equipped with greatswords.
 
@@ -37,6 +36,59 @@ Jazlyn hits the basilisk for 10 damage. Basilisk has 5 HP left.
 Theron hits the basilisk for 9 damage. Basilisk has 0 HP left.
 The basilisk collapses and the heroes celebrate their victory!
 
+Part 3
+As cool as that was, it wasn't really a fair fight. It's time for the basilisk to strike back and use its petrifying gaze ability.
+
+The character has a chance to save themself from the attack. In particular, they do a DC 12 Constitution saving throw. To do a Constitution saving throw you roll d20 and add the constitution ability score to it. DC means difficulty class and the saving throw needs to be at least DC or higher. 
+
+To make things simple, let's assume all our characters have constitution 5 (they're weaklings, OK?). If they roll a 7, 7 + 5 = 12 and they get saved. If they roll a 6, 6 + 5 = 11, which is lower than the DC 12 required for a save, they get turned into stone!
+
+Oh yeah, let's make things even harder by removing the great swords and giving our puny heroes daggers instead.
+
+Completion goals:
+Replace hit calculations to use daggers (1d4 damage).
+After each round of heroes' attacks, the basilisk uses petrifying gaze on a random hero. Display who it is.
+The hero has to pass a DC 12 constitution saving throw to survive. Assume they have constitution 5, add a d20 roll, and check if the total is 12 or higher. Display the roll amount and if they succeed to be saved.
+If they don't succeed, display that they got turned into stone and remove them from the list of heroes.
+If all heroes get turned into stone before they defeat the basilisk, the game is over. Display a bad ending narrative.
+
+Example output:
+A party of warriors (Jazlyn, Theron, Dayana, Rolando) descends into the dungeon.
+A basilisk with 45 HP appears!
+Jazlyn hits the basilisk for 2 damage. Basilisk has 43 HP left.
+Theron hits the basilisk for 1 damage. Basilisk has 42 HP left.
+Dayana hits the basilisk for 2 damage. Basilisk has 40 HP left.
+Rolando hits the basilisk for 1 damage. Basilisk has 39 HP left.
+The basilisk uses petrifying gaze on Rolando!
+Rolando rolls a 6 and fails to be saved. Rolando is turned into stone.
+Jazlyn hits the basilisk for 4 damage. Basilisk has 35 HP left.
+Theron hits the basilisk for 4 damage. Basilisk has 31 HP left.
+Dayana hits the basilisk for 2 damage. Basilisk has 29 HP left.
+The basilisk uses petrifying gaze on Theron!
+Theron rolls a 4 and fails to be saved. Theron is turned into stone.
+Jazlyn hits the basilisk for 2 damage. Basilisk has 27 HP left.
+Dayana hits the basilisk for 4 damage. Basilisk has 23 HP left.
+The basilisk uses petrifying gaze on Dayana!
+Dayana rolls a 20 and is saved from the attack.
+Jazlyn hits the basilisk for 2 damage. Basilisk has 21 HP left.
+Dayana hits the basilisk for 2 damage. Basilisk has 19 HP left.
+The basilisk uses petrifying gaze on Jazlyn!
+Jazlyn rolls a 12 and is saved from the attack.
+Jazlyn hits the basilisk for 1 damage. Basilisk has 18 HP left.
+Dayana hits the basilisk for 1 damage. Basilisk has 17 HP left.
+The basilisk uses petrifying gaze on Jazlyn!
+Jazlyn rolls a 1 and fails to be saved. Jazlyn is turned into stone.
+Dayana hits the basilisk for 4 damage. Basilisk has 13 HP left.
+The basilisk uses petrifying gaze on Dayana!
+Dayana rolls a 17 and is saved from the attack.
+Dayana hits the basilisk for 3 damage. Basilisk has 10 HP left.
+The basilisk uses petrifying gaze on Dayana!
+Dayana rolls a 12 and is saved from the attack.
+Dayana hits the basilisk for 2 damage. Basilisk has 8 HP left.
+The basilisk uses petrifying gaze on Dayana!
+Dayana rolls a 5 and fails to be saved. Dayana is turned into stone.
+The party has failed and the basilisk continues to turn unsuspecting adventurers to stone.
+
  */
 
 using System;
@@ -55,6 +107,9 @@ namespace w02d04m02 {
         }
 
         static void basiliskBattle(int randomSeed) {
+            Console.WriteLine("--START OF PROGRAM");
+            Console.WriteLine();
+
             var dice = new Random(randomSeed);
             var partyMembers = new List<string> { "Christ", "Buddha", "Lama", "Drumpf" };
             Console.WriteLine($"A party of warriors ({String.Join(", ", partyMembers)}) descends into the dungeon.");
@@ -64,13 +119,19 @@ namespace w02d04m02 {
                 basiliskHP = basiliskHP + roll;
             }
             Console.WriteLine($"A basilisk with {basiliskHP} HP appears!");
-            while (basiliskHP > 0) {
+            while (basiliskHP > 0 && partyMembers.Count > 0) {
                 for (int i = 0; i < partyMembers.Count && basiliskHP > 0; i++) {
                     Console.Write($"{partyMembers[i]} hits the basilisk for ");
                     int damageRoll = 0;
+                    damageRoll = damageRoll + dice.Next(1, 5); // 1d4 according to Part 3
+
+                    /*
+                    // 2d6 according to Part 2:
                     for (int ii = 0; ii < 2; ii++) {
                         damageRoll = damageRoll + dice.Next(1, 7);
                     }
+                    */
+
                     Console.Write($"{damageRoll} damage. Basilisk has ");
                     basiliskHP = basiliskHP - damageRoll;
                     if (basiliskHP < 0) {
@@ -79,8 +140,25 @@ namespace w02d04m02 {
                     Console.WriteLine($"{basiliskHP} HP left.");
 
                 }
+                if (basiliskHP != 0) {
+                    int victim = dice.Next(0, partyMembers.Count);
+                    Console.WriteLine($"The basilisk uses petrifying gaze on {partyMembers[victim]}!");
+                    int conResult = dice.Next(1, 21) + 5;
+                    if (conResult >= 12) {
+                        Console.WriteLine($"{partyMembers[victim]} rolls a {conResult} and is saved from the attack.");
+                    }
+                    else {
+                        Console.WriteLine($"{partyMembers[victim]} rolls a {conResult} and fails to be saved. {partyMembers[victim]} is turned into stone.");
+                        partyMembers.Remove(partyMembers[victim]);
+                    }
+                }
             }
-            Console.WriteLine($"The basilisk collapses and the heroes celebrate their victory!");
+            if (partyMembers.Count == 0) {
+                Console.WriteLine($"The party has failed and the basilisk continues to turn unsuspecting adventurers to stone.");
+            }
+            else {
+                Console.WriteLine($"The basilisk collapses and the heroes celebrate their victory!");
+            }
 
             Console.WriteLine();
             Console.WriteLine("--END OF PROGRAM");
