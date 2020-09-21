@@ -105,8 +105,7 @@ namespace w02d05m02 {
                     }
                 }
             }
-            string amountInLetters = "";
-            NumbersToLetters(monsterMembers.Count, out amountInLetters);
+            string amountInLetters = NumbersToLetters(monsterMembers.Count);
             if (partyMembers.Count == 0) {
                 Console.WriteLine($"The party has failed and the {lastMonster} continues to attack unsuspecting adventurers.");
             }
@@ -161,7 +160,8 @@ namespace w02d05m02 {
             }
         }
 
-        static void NumbersToLetters(int inputNumber, out string amountInLetters) {
+        static string NumbersToLetters(int inputNumber) {
+            string amountInLetters;
             if (inputNumber == 1) {
                 amountInLetters = "one";
             }
@@ -183,6 +183,7 @@ namespace w02d05m02 {
             else {
                 amountInLetters = inputNumber.ToString();
             }
+            return amountInLetters;
         }
     }
 }
