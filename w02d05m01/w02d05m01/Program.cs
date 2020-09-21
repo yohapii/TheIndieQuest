@@ -94,7 +94,7 @@ namespace w02d05m01 {
             string lastMonster = "";
             while (partyMembers.Count != 0 && battleIndex < monsterMembers.Count) {
                 for (; battleIndex < monsterMembers.Count; battleIndex++) {
-                    SimulateBattle(randomSeed, partyMembers, monsterMembers[battleIndex], monsterMembersHP[battleIndex], monsterMembersDifficulty[battleIndex]);
+                    SimulateBattle(randomSeed+battleIndex, partyMembers, monsterMembers[battleIndex], monsterMembersHP[battleIndex], monsterMembersDifficulty[battleIndex]);
                     if (partyMembers.Count == 0) {
                         lastMonster = monsterMembers[battleIndex];
                         battleIndex = monsterMembers.Count;
