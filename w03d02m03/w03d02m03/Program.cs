@@ -39,7 +39,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace w03d01m03 {
+namespace w03d02m03 {
     class Program {
         static void Main(string[] args) {
             for (int i = 0; i <= 128; i++) {

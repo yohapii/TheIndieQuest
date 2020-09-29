@@ -42,7 +42,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace w03d01m02 {
+namespace w03d03m02 {
     class Program {
         static void Main(string[] args) {
             var items = new List<string> { "Christ", "Buddha", "Lama", "Drumpf", "Jan", "Newnorth", "Cederholm" };

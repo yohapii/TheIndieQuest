@@ -1,165 +1,60 @@
-﻿using System;
+﻿/* Objective: Fractal
+The first coworker to come to your desk today is one of the graphics engine programmers:
+
+The producer said to show you some cool algorithms? Here's one that draws the Mandelbrot fractal. I wrote it in pseudocode so it's useful to whoever wants to try it, no matter the programming language. Well, there's some .NET specific stuff in there, but yeah, you should be good if you do it with C#. Check it out!
+
+FOR y FROM -10 to 10 DO
+    FOR x FROM 1 to 80 DO
+        SET REAL r TO 0
+        SET REAL i TO 0
+        SET INTEGER k TO -1
+
+        WHILE r² + i² < 11 AND k < 112
+            SET REAL t TO r
+            SET r TO t² - i² - 2.3 + x / 24.5
+            SET i TO 2 * t * i + y / 8.5
+            INCREMENT k
+        END WHILE
+
+        SET INTEGER c TO k MOD 16
+        SET Console.BackgroundColor TO (ConsoleColor)c
+        SEND ' ' TO DISPLAY
+    END FOR
+
+    SEND NEW LINE TO DISPLAY
+END FOR
+
+Completion goals:
+1. Read Page 2 of the Algorithms article: Pseudo-code. https://www.bbc.co.uk/bitesize/guides/z7kkw6f/revision/2
+2. Implement the above program in C#.
+
+*/
+
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace w03d03m01 {
     class Program {
-        static Random rand = new Random();
-
         static void Main(string[] args) {
-            DrawMap(140, 40);
-        }
-
-        static int RandomPath(int previousCoordinate, int changeChance, int maxNumber) {
-            bool isPlus = Convert.ToBoolean(rand.Next(0, 2));
-            bool isExecute = false;
-
-            if (rand.Next(0, changeChance) == 0) {
-                isExecute = true;
-            }
-
-            if (isExecute) {
-                if (isPlus) {
-                    if (maxNumber - 2 == previousCoordinate) {
-                        return previousCoordinate;
+            for (int y = -10; y <= 10; y++) {
+                for (int x = 1; x <= 80; x++) {
+                    double r = 0;
+                    double i = 0;
+                    int k = -1;
+                    while (((r * r) + (i * i)) < 11 && k < 112) {
+                        double t = r;
+                        r = (t * t) - (i * i) - 2.3 + x / 24.5;
+                        i = 2 * t * i + y / 8.5;
+                        k++;
                     }
-                    return previousCoordinate + 1;
-                }
-                else {
-                    return previousCoordinate - 1;
-                }
-            }
-            else {
-                return previousCoordinate;
-            }
-
-        }
-
-        static bool IsBridge(int index, int roadCoordinates) {
-            if (index >= roadCoordinates && index <= roadCoordinates + 6) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        static void DrawMap(int width, int height) {
-            // Prepare from this point
-            var riverCoordinates = new List<int>();
-            for (int i = 0; i < height; i++) {
-                if (i == 0) {
-                    riverCoordinates.Add(rand.Next(Convert.ToInt32(width * 0.75), width - 2));
-                }
-                else {
-                    riverCoordinates.Add(RandomPath(riverCoordinates[i - 1], 2, width));
-                }
-            }
-            int bridgeCoordinateY = rand.Next(height / 2 - height / 2 / 2, height / 2 - height / 2 / 2 + height / 2 + 1);
-            int bridgeCoordinateX = riverCoordinates[bridgeCoordinateY];
-
-            var horizontalRoadCoordinatesY = new List<int>();
-
-            horizontalRoadCoordinatesY.Add(bridgeCoordinateY + 1);
-
-            //growing road from left of bridge to left edge
-            int j = 0;
-           for (int i = bridgeCoordinateX - 1; i > 0; i--) {
-                horizontalRoadCoordinatesY.Add(RandomPath(horizontalRoadCoordinatesY[j], 7, height));
-                j++;
-            }
-
-            horizontalRoadCoordinatesY.Reverse();
-
-            //growing road from right of bridge to right edge
-            for (int i = horizontalRoadCoordinatesY.Count() - 1; i < width; i++) {
-                if (IsBridge(i, bridgeCoordinateX - 1)) {
-                    horizontalRoadCoordinatesY.Add(horizontalRoadCoordinatesY[i]);
-                }
-                else {
-                    horizontalRoadCoordinatesY.Add(RandomPath(horizontalRoadCoordinatesY[i], 3, height));
-                }
-            }
-
-            // Draw from this point
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    if (IsBorder(x, y, width, height)) {
-                        //border
-
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-
-                        if ((x == 0 || x == width - 1) && (y == 0 || y == height - 1)) {
-                            //corner
-                            Console.Write("+");
-                            continue;
-                        }
-                        if (x == 0 || x == width - 1) {
-                            //vertical
-                            Console.Write("|");
-                            continue;
-                        }
-                        else {
-                            //horizontal
-                            Console.Write("-");
-                            continue;
-                        }
-                    }
-
-                    if (x < width / 4 && IsRoad(horizontalRoadCoordinatesY[x], y) == false) {
-                        //trees
-                        string trees = @"%()TA@";
-
-                        Console.ForegroundColor = ConsoleColor.Green;
-
-                        if (rand.Next(0, x) <= 1) {
-                            Console.Write(trees[rand.Next(trees.Length)]);
-                        }
-                        else {
-                            Console.Write(" ");
-                        }
-                        continue;
-                    }
-
-                    //bridge
-                    if (IsBridge(x, bridgeCoordinateX - 1) && IsRoad(horizontalRoadCoordinatesY[x], y + 1) || IsBridge(x, bridgeCoordinateX - 1) && IsRoad(horizontalRoadCoordinatesY[x], y - 1)) {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("B");
-
-                        continue;
-                    }
-
-                    //road
-                    if (IsRoad(horizontalRoadCoordinatesY[x], y)) {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("#");
-                    }
-                    else {
-                        Console.Write(" ");
-                    }
+                    int c = k % 16;
+                    Console.BackgroundColor = (ConsoleColor)c;
+                    Console.Write(" ");
                 }
                 Console.WriteLine();
-            }
-        }
-
-        static bool IsRoad(int x, int y) {
-            if (x == y) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        static bool IsBorder(int x, int y, int width, int height) {
-            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                return true;
-            }
-            else {
-                return false;
             }
         }
     }

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{180449DE-7FA2-43DF-BF92-647293AE1DC6}</ProjectGuid>
+    <ProjectGuid>{132946FB-C1A2-4C37-950A-5966F0EB1A25}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>w03d01m01</RootNamespace>
-    <AssemblyName>w03d01m01</AssemblyName>
+    <RootNamespace>w02d05m02</RootNamespace>
+    <AssemblyName>w02d05m02</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

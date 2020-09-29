@@ -79,7 +79,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace w03d01m04 {
+namespace w03d02m04 {
     class Program {
         static void Main(string[] args) {
             TheMatrix();
