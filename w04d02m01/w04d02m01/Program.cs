@@ -10,22 +10,23 @@ namespace w04d02m01 {
         static Random rand = new Random();
 
         static void Main(string[] args) {
-            DrawMap(140, 40);
+            DrawMap(75, 20, "ADVENTURE MAP"); // (width, height, "title") - Mimimum width is 15.
         }
 
-        static void DrawMap(int width, int height) {
+        static void DrawMap(int width, int height, string title) {
+
             // Prepare from this point
             //
             var riverCoordinates = new List<int>();
             for (int i = 0; i < height; i++) {
                 if (i == 0) {
-                    riverCoordinates.Add(rand.Next(Convert.ToInt32(width * 0.75), width - 2));
+                    riverCoordinates.Add(rand.Next(width / 4 * 3, width / 15 * 14));
                 }
                 else {
                     riverCoordinates.Add(RandomPath(riverCoordinates[i - 1], 2, width));
                 }
             }
-            int bridgeCoordinateY = rand.Next(height / 2 - height / 2 / 2, height / 2 - height / 2 / 2 + height / 2 + 1);
+            int bridgeCoordinateY = rand.Next(height / 2 / 2, height / 4 * 3);
             int bridgeCoordinateX = riverCoordinates[bridgeCoordinateY];
 
             var horizontalRoadCoordinatesY = new List<int>();
@@ -39,6 +40,7 @@ namespace w04d02m01 {
                 j++;
             }
 
+            //reversing list because it was made in reverse up to this point
             horizontalRoadCoordinatesY.Reverse();
 
             //growing road from right of bridge to right edge
@@ -53,12 +55,14 @@ namespace w04d02m01 {
 
             // Draw from this point
             //
+            bool bridgeDrawn = false;
+
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    if (IsBorder(x, y, width, height)) {
-                        //border
 
-                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    //border
+                    if (IsBorder(x, y, width, height)) {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
 
                         if ((x == 0 || x == width - 1) && (y == 0 || y == height - 1)) {
                             //corner
@@ -77,8 +81,16 @@ namespace w04d02m01 {
                         }
                     }
 
+                    //title
+                    if (y == 1 && x == width / 2 - title.Length / 2) {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write(title);
+                        x += title.Length-1;
+                        continue;
+                    }
+
+                    //trees
                     if (x < width / 4 && IsRoad(horizontalRoadCoordinatesY[x], y) == false) {
-                        //trees
                         string trees = @"%()TA@";
 
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -94,23 +106,40 @@ namespace w04d02m01 {
 
                     //bridge
                     if (IsBridge(x, bridgeCoordinateX - 1) && IsRoad(horizontalRoadCoordinatesY[x], y + 1) || IsBridge(x, bridgeCoordinateX - 1) && IsRoad(horizontalRoadCoordinatesY[x], y - 1)) {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("B");
-
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write("=");
+                        bridgeDrawn = true;
                         continue;
                     }
 
-                    //road
+                    //horizontal road
                     if (IsRoad(horizontalRoadCoordinatesY[x], y)) {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("#");
+                        DrawRoad();
+                        continue;
                     }
-                    else {
-                        Console.Write(" ");
+
+                    //vertical road next to river
+                    if (bridgeDrawn && IsRiverEdge(x, riverCoordinates[y])) {
+                        DrawRoad();
+                        continue;
                     }
+
+                    //river
+                    if (IsRiver(x, riverCoordinates[y])) {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(RiverDirection(riverCoordinates[y], riverCoordinates[y + 1]));
+                        continue;
+                    }
+
+                    Console.Write(" ");
                 }
                 Console.WriteLine();
             }
+        }
+
+        static void DrawRoad() {
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("#");
         }
 
         static int RandomPath(int previousCoordinate, int changeChance, int maxNumber) {
@@ -144,6 +173,36 @@ namespace w04d02m01 {
             }
             else {
                 return false;
+            }
+        }
+
+        static bool IsRiver(int index, int riverCoordinate) {
+            if (index > riverCoordinate && index <= riverCoordinate + 3) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        static bool IsRiverEdge(int index, int riverCoordinate) {
+            if (index + 4 == riverCoordinate) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        static string RiverDirection(int riverCoordinate, int nextRiverCoordinate) {
+            if (riverCoordinate == nextRiverCoordinate) {
+                return "|";
+            }
+            else if (riverCoordinate < nextRiverCoordinate) {
+                return @"\";
+            }
+            else {
+                return "/";
             }
         }
 
