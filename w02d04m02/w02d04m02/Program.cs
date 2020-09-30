@@ -17,7 +17,7 @@ namespace w02d04m02 {
             string tankGraphic = "T";
             string explosionGraphic = "B   (oom)";
             int playingField = 80;
-            int shellAmount = 3;
+            int shellAmount = 5;
             int distanceToTank = dice.Next(40, 71);
             bool gameIsOn = true;
             bool gameIsWin = false;
