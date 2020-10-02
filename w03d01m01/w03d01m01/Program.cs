@@ -90,46 +90,46 @@ namespace w03d01m01 {
             }
         }
 
-        static void DrawFrame(int firstRoll = -1, int secondRoll = -1) {
-            string first = " ";
-            string second = " ";
+        static void DrawFrame(int firstThrow = -1, int secondThrow = -1) {
+            string firstThrowText = " ";
+            string secondThrowText = " ";
 
             Console.Write("+-----");
             Console.Write("+");
             Console.WriteLine();
 
-            if (firstRoll != 10) {
-                if (firstRoll == 0) {
-                    first = "-";
+            if (firstThrow != 10) {
+                if (firstThrow == 0) {
+                    firstThrowText = "-";
                 }
-                else if (firstRoll == -1) {
-                    first = " ";
+                else if (firstThrow == -1) {
+                    firstThrowText = " ";
                 }
                 else {
-                    first = firstRoll.ToString();
+                    firstThrowText = firstThrow.ToString();
                 }
 
-                if (secondRoll == 0) {
-                    second = "-";
+                if (secondThrow == 0) {
+                    secondThrowText = "-";
                 }
-                else if (secondRoll + firstRoll == 10) {
-                    second = "/";
+                else if (secondThrow + firstThrow == 10) {
+                    secondThrowText = "/";
                 }
-                else if (secondRoll == -1) {
-                    second = " ";
+                else if (secondThrow == -1) {
+                    secondThrowText = " ";
                 }
                 else {
-                    second = secondRoll.ToString();
+                    secondThrowText = secondThrow.ToString();
                 }
             }
             else {
-                first = "X";
-                second = " ";
+                firstThrowText = "X";
+                secondThrowText = " ";
             }
 
             Console.Write("| ");
-            Console.Write($"|{first}");
-            Console.Write($"|{second}");
+            Console.Write($"|{firstThrowText}");
+            Console.Write($"|{secondThrowText}");
             Console.Write("|");
             Console.WriteLine();
             Console.Write("+ ----");
