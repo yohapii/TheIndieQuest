@@ -59,9 +59,6 @@ namespace w03d01m01 {
                                 standingPinsList[isThisKnocked] = false;
                                 knockedPins++;
                             }
-                            if (! standingPinsList.Contains(true)) {
-                                break;
-                            }
                         }
 
                         DrawPins(standingPinsList);
