@@ -135,26 +135,26 @@ namespace w03d05m01 {
             Console.Write("+\n\n");
         }
 
-        static void DrawPins(List<bool> standingPinsList) {
+        static void DrawPins(List<bool> pinsStanding) {
             Console.WriteLine("Current pins:\n");
 
             // back row
-            DrawRow(7, 10, standingPinsList);
+            DrawRow(7, 10, pinsStanding);
 
             // middleback row
-            DrawRow(4, 6, standingPinsList, "  ");
+            DrawRow(4, 6, pinsStanding, "  ");
 
             // middlefront row
-            DrawRow(2, 3, standingPinsList, "    ");
+            DrawRow(2, 3, pinsStanding, "    ");
 
             // front pin
-            DrawRow(1, 1, standingPinsList, "      ");
+            DrawRow(1, 1, pinsStanding, "      ");
         }
 
-        static void DrawRow(int startpin, int lastpin, List<bool> standingPinsList, string padding = "") {
+        static void DrawRow(int startpin, int lastpin, List<bool> pinsStanding, string padding = "") {
             Console.Write(padding);
             for (int i = startpin - 1; i < lastpin; i++) {
-                if (standingPinsList[i]) {
+                if (pinsStanding[i]) {
                     Console.Write("O   ");
                 }
                 else {
