@@ -79,7 +79,7 @@ namespace w06d02m02 {
         }
 
         static bool IsStandardDiceNotation(string input) {
-            string sPattern = @"^\d{0,}d\d+(?(?=[+-]\d{1,})[+-]\d{1,}$|$)";
+            string sPattern = @"^\d*d\d+(?(?=[+-]\d+)[+-]\d+$|$)";
             if (Regex.IsMatch(input, sPattern)) {
                 return true;
             }
